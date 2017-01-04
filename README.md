@@ -11,10 +11,10 @@ Today, I want to tell my past, the stupid one is me, I take a narrow perspective
 OK. The story is over, let's start to make the system.
 
 ## Installation
-***
-git clone https://github.com/GJim/projectScheduling.git
-npm install --save
-***
+```
+> git clone https://github.com/GJim/projectScheduling.git
+> npm install --save
+```
 
 ## License
 MIT
