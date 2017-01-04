@@ -10,5 +10,11 @@ After work, office assistant asked me a question "Can you making a system for do
 Today, I want to tell my past, the stupid one is me, I take a narrow perspective on this problem, so I can't solve the problem then.
 OK. The story is over, let's start to make the system.
 
+## Installation
+***
+git clone https://github.com/GJim/projectScheduling.git
+npm install --save
+***
+
 ## License
 MIT
