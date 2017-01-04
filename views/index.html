@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Project Scheduling</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+	<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#classroom">First Step</a></li>
+    <li><a data-toggle="tab" id="ss" href="#acception">Second Step</a></li>
+    <li><a data-toggle="tab" id="ts" href="#project">Third Step</a></li>
+    <li><a data-toggle="tab" id="fs" href="#lock">Fourth Step</a></li>
+    <li><a data-toggle="tab" id="rs" href="#result">Result</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="classroom" class="tab-pane fade in active">
+  		<h3>Classroom Available Time</h3>
+  		<div class="alert alert-info" role="alert">Tips: please input classroom name (please use common to split each other)</div>
+  		<div class="input-group">
+			  <input type="text" class="form-control" placeholder="管371,管226,管241" id="cInput">
+			  <div class="input-group-btn">
+			  	<button id="createCR" type="button" class="btn btn-default">Create</button>
+			  </div>
+			</div>
+			<div class="alert alert-info ca" role="alert" hidden>Tips: click the column to set the classroom available time</div>
+			<table class="table table-bordered" id="ct" hidden>
+		    <thead>
+		      <tr id="cth"></tr>
+		    </thead>
+		    <tbody>
+		      <tr id="cStage1"></tr>
+		      <tr id="cStage2"></tr>
+		      <tr id="cStage3"></tr>
+		      <tr id="cStage4"></tr>
+		    </tbody>
+		  </table>
+			<div class="input-group col-md-offset-5 ca" style="display: none;">
+				<button id="nextCR" type="button" class="btn btn-info">Next Step</button>
+			</div>
+    </div>
+    <div id="acception" class="tab-pane fade">
+    	<h3>Professor Available Time</h3>
+  		<div class="alert alert-info" role="alert">Tips: please input professor name (please use common to split each other)</div>
+  		<div class="input-group">
+			  <input type="text" class="form-control" placeholder="戴榮賦,陳建宏" id="tInput">
+			  <div class="input-group-btn">
+			  	<button id="createPF" type="button" class="btn btn-default">Create</button>
+			  </div>
+			</div>
+			<div class="alert alert-info ta" role="alert" hidden>Tips: click the column to set the professor available time</div>
+			<table class="table table-bordered" id="tt" hidden>
+		    <thead>
+		      <tr id="tth"></tr>
+		    </thead>
+		    <tbody>
+		      <tr id="tStage1"></tr>
+		      <tr id="tStage2"></tr>
+		      <tr id="tStage3"></tr>
+		      <tr id="tStage4"></tr>
+		    </tbody>
+		  </table>
+			<div class="input-group col-md-offset-5 ta" style="display: none;">
+				<button id="nextPF" type="button" class="btn btn-info">Next Step</button>
+			</div>
+    </div>
+    <div id="project" class="tab-pane fade">
+    	<h3>Project Information</h3>
+  		<div class="alert alert-info" role="alert">Tips: please input project name ( please use common to split each other )</div>
+  		<div class="input-group">
+			  <input type="text" class="form-control" placeholder="Xeeker,Schooling Fish" id="pInput">
+			  <div class="input-group-btn">
+			  	<button id="createPJ" type="button" class="btn btn-default">Create</button>
+			  </div>
+			</div>
+			<div class="alert alert-info pa" role="alert" hidden>Tips: click the column to set the first time reviewing teacher and leading teacher ( correct mark: first time reviewing teacher, cross mark: leading teacher )</div>
+			<div class="alert alert-danger pa" role="alert" hidden>Tips: double click the column to cancel the setting</div>
+			<table class="table table-bordered" id="pt" hidden>
+		    <thead>
+		      <tr id="pth"></tr>
+		    </thead>
+		    <tbody></tbody>
+		  </table>
+		  <div class="input-group col-md-offset-5 pa" style="display: none;">
+				<button id="nextPJ" type="button" class="btn btn-info">Next Step</button>
+			</div>
+    </div>
+    <div id="lock" class="tab-pane fade">
+    	<h3>Professors' heart lock relationship</h3>
+  		<div class="alert alert-info" role="alert">Tips: please input the number of heart lock relationship</div>
+  		<div class="input-group">
+			  <input type="text" class="form-control" placeholder="3" id="lInput">
+			  <div class="input-group-btn">
+			  	<button id="createLC" type="button" class="btn btn-default">Create</button>
+			  </div>
+			</div>
+			<div class="alert alert-info la" role="alert" hidden>Tips: the more same relationship you setting the more system care</div>
+			<table class="table table-bordered" id="lt" hidden>
+		    <thead>
+		      <tr>
+		      	<th>ProfessorA</th>
+		      	<th>ProfessorB</th>
+		      </tr>
+		    </thead>
+		    <tbody></tbody>
+		  </table>
+		  <div class="input-group col-md-offset-5 la" style="display: none;">
+				<button id="nextLC" type="button" class="btn btn-info">Next Step</button>
+			</div>
+    </div>
+    <div id="result" class="tab-pane fade">
+    	<div class="input-group col-md-offset-5">
+				<button id="createRS" type="button" class="btn btn-info">Create</button>
+			</div>
+    	<h1>Score: <b id="score"></b></h1>
+    	<table class="table table-bordered">
+		    <thead>
+		      <tr id="rth"></tr>
+		    </thead>
+		    <tbody>
+		      <tr id="rStage1"></tr>
+		      <tr id="rStage2"></tr>
+		      <tr id="rStage3"></tr>
+		      <tr id="rStage4"></tr>
+		    </tbody>
+		  </table>
+		  <table class="table table-bordered">
+		    <thead>
+		      <tr id="nth"></tr>
+		    </thead>
+		    <tbody>
+		      <tr id="ntd"></tr>
+		    </tbody>
+		  </table>
+		  <div id="record" style="color: red;"></div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="/js/index.js"></script>
+</body>
+</html>
