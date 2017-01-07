@@ -7,28 +7,14 @@ router.get('/schedule', function(req, res) {
 	let locks = JSON.parse(req.query.locks);
 	let acceptions = JSON.parse(req.query.acceptions);
 	let ranks = JSON.parse(req.query.ranks);
-	//a blending method for genetic algorithm
-	//take 2 group for evolving
-	//take 10 best one from 2 group
-	let ga1 = new geneticAlgorithm();
-	let ga2 = new geneticAlgorithm();
-	ga1.initial(classrooms, projects, locks, acceptions, ranks);
-	ga2.initial(classrooms, projects, locks, acceptions, ranks);
-	/*the group with 2000 generations and no mutation*/
-	for(let i=0; i<2000; i++) {
-		ga1.crossover();
-		ga1.selections();
+	let ga = new geneticAlgorithm();
+	ga.initial(classrooms, projects, locks, acceptions, ranks);
+	for(let i=0; i<1000; i++) {
+		ga.crossover();
+		ga.selections();
+		ga.mutation();
 	}
-	/*the group with 2000 generations and 199 times mutation*/
-	for(let i=0; i<2000; i++) {
-		ga2.crossover();
-		ga2.selections();
-		((i-10)%10 == 1) && ga2.mutation();
-	}
-	let g1 = ga1.getGeneration();
-	let g2 = ga2.getGeneration();
-	let rs = g1.concat(g2);
-	rs = blending(rs);
+	let rs = ga.getElite();
 	let stages = clean(rs.stages);
 	res.status(200).json({score: rs.score, stages: stages, process: rs.process});
 });
@@ -41,7 +27,8 @@ function geneticAlgorithm() {
 	this.rank = [];
 	this.generations = [];
 	this.stageStruture = null;
-	this.initial = function(classroom, project, lock, acception, rank) {
+	this.best = null;
+	this.initial = function (classroom, project, lock, acception, rank) {
 		this.classroom = classroom;
 		this.project = project;
 		this.lock = lock;
@@ -54,6 +41,12 @@ function geneticAlgorithm() {
 			let f = fitness(g, this.acception, this.project, this.lock);
 			this.generations.push({stages: g, score: f.score, process: f.process});
 		}
+
+		this.generations.sort(function(a, b) {
+			return b.score - a.score;
+		});
+		this.best = this.generations[0];
+
 	};
 	this.crossover = function() {
 		//initialize parent generation value and avoid overriding
@@ -88,15 +81,17 @@ function geneticAlgorithm() {
 		this.generations.push({stages: father, score: f.score, process: f.process});
 	};
 	this.mutation =  function() {
+		//set the best one and reset all generation
+		this.generations.sort(function(a, b) {
+			return b.score - a.score;
+		});
+		this.best = this.best.score > this.generations[0].score ? this.best : this.generations[0];
 		this.stageStruture = fixedProject(this.project, this.classroom);
-		for(let i=0; i<1; i++){
+		this.generations = [];
+		for(let i=0; i<10; i++){
 			let g = putTeacher(this.stageStruture, this.acception);
 			let f = fitness(g, this.acception, this.project, this.lock);
 			this.generations.push({stages: g, score: f.score, process: f.process});
-			this.generations.sort(function(a, b) {
-				return a.score - b.score;
-			});
-			this.generations.pop();
 		}
 	};
 	this.selections = function() {
@@ -107,12 +102,8 @@ function geneticAlgorithm() {
 		//abandon the worse one
 		this.generations.pop();
 	};
-	this.getGeneration = function() {
-		//sort the array by generation's fitness decending
-		this.generations.sort(function(a, b) {
-			return b.score - a.score;
-		});
-		return this.generations;
+	this.getElite = function() {
+		return this.best;
 	}
 }
 
@@ -179,7 +170,7 @@ function putTeacher(generation, acception) {
 	//project's professor
 	//use one teachers' array in one time segment avoid the same
 	//teacher showing up in same project or in same time segment
-	let ts = randomArray(acception.slice());
+	let ts = randomArray(JSON.parse(JSON.stringify(acception)));
 	for(let i=0; i<stages1.length; i++) {
 		let c = 0;
 		stages1[i].teachers = [];
@@ -193,7 +184,7 @@ function putTeacher(generation, acception) {
 			c++;
 		}
 	}
-	ts = randomArray(acception.slice());
+	ts = randomArray(JSON.parse(JSON.stringify(acception)));
 	for(let i=0; i<stages2.length; i++) {
 		let c = 0;
 		stages2[i].teachers = [];
@@ -207,7 +198,7 @@ function putTeacher(generation, acception) {
 			c++;
 		}
 	}
-	ts = randomArray(acception.slice());
+	ts = randomArray(JSON.parse(JSON.stringify(acception)));
 	for(let i=0; i<stages3.length; i++) {
 		let c = 0;
 		stages3[i].teachers = [];
@@ -221,7 +212,7 @@ function putTeacher(generation, acception) {
 			c++;
 		}
 	}
-	ts = randomArray(acception.slice());
+	ts = randomArray(JSON.parse(JSON.stringify(acception)));
 	for(let i=0; i<stages4.length; i++) {
 		let c = 0;
 		stages4[i].teachers = [];
@@ -250,8 +241,8 @@ function fitness(generation, acception, project, lock) {
 	let leadingRank = [];
 	let reviewingRank = [];
 	for(let i=0; i<acception.length; i++) {
-		leadingRank.push({name: acception[i].name, quantity: 0});
-		reviewingRank.push({name: acception[i].name, quantity: 0});
+		leadingRank.push({name: acception[i].name, quantity: 0, rank: 0});
+		reviewingRank.push({name: acception[i].name, quantity: 0, rank: 0});
 	}
 	for(let i=0; i<project.length; i++) {
 		for(let j=0; j<leadingRank.length; j++) {
@@ -341,26 +332,32 @@ function fitness(generation, acception, project, lock) {
 		}
 	}
 	reviewingRank.sort(function(a, b) {
-		return a.quantity - b.quantity;
+		return b.quantity - a.quantity;
 	});
-	leadingRank.sort(function(a, b) {
-		return a.quantity - b.quantity;
-	});
+	let r = 0;
 	for(let i=0; i<reviewingRank.length; i++) {
-		if(leadingRank[i].quantity > 0) {
-			score = (reviewingRank[i].name == leadingRank[i].name) ? score+10 : score-10;
-			if(reviewingRank[i].name != leadingRank[i].name) process.push(reviewingRank[i].name+" ranking error!")
+		reviewingRank[i].rank = (i === reviewingRank.length-1) ? r : (reviewingRank[i].quantity > reviewingRank[i+1].quantity) ? r++ : r;
+	}
+	leadingRank.sort(function(a, b) {
+		return b.quantity - a.quantity;
+	});
+	r = 0;
+	for(let i=0; i<leadingRank.length; i++) {
+		leadingRank[i].rank = (i === leadingRank.length-1) ? r : (leadingRank[i].quantity > leadingRank[i+1].quantity) ? r++ : r;
+	}
+	reviewingRank = reviewingRank.concat(leadingRank);
+	reviewingRank.sort(function(a, b) {
+		return b.name.localeCompare(a.name);
+	});
+	for(let i=0; i<reviewingRank.length; i+=2) {
+		if(reviewingRank[i].rank != reviewingRank[i+1].rank) {
+			score -= 10;
+			process.push(reviewingRank[i].name+" ranking error!")
+		} else {
+			score += 10;
 		}
 	}
 	return {score: score, process: process};
-}
-
-//blending the different group and select the best one
-function blending(array) {
-	array.sort(function(a, b) {
-		return b.score - a.score;
-	});
-	return array[0];
 }
 
 //clean the redundant data
