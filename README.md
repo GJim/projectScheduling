@@ -13,7 +13,7 @@ OK. The story is over, let's start to make the system.
 ## Installation
 ```
 git clone https://github.com/GJim/projectScheduling.git
-npm install --save
+npm install
 ```
 
 ## License
