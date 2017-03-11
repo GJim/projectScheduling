@@ -1,0 +1,363 @@
+/*Classroom Available Time*/
+//管371,管260,管226,管241
+
+/*Professor Available Time*/
+//余菁蓉,尹邦嚴,陳彥錚,黃俊哲,簡宏宇,王育民,游子宜,俞旭昇,姜美玲,洪嘉良,戴榮賦,陳小芬,陳建宏
+
+/*Project Information*/
+//Schooling fish,Cheese 老師,Arduino 遠端農業監控系統,Let's Q&A,RunningX,應用無人載具進行空氣品質調查,TBS 一起來 Share Share 共享平台,好食刻餐飲共享平台,以物聯網為基礎建構魚菜共生系統暨資料分析共享平台,埔里區域 PM2.5 低階感測器數據分析,上路有三寶安全不能少
+
+
+/*data sent to server structure*/
+var classrooms = [
+  {
+    room: "管371",
+    time: "13:10-14:00",
+    available: true
+  },
+  {
+    room: "管260",
+    time: "13:10-14:00",
+    available: true
+  },
+  {
+    room: "管226",
+    time: "13:10-14:00",
+    available: true
+  },
+  {
+    room: "管241",
+    time: "13:10-14:00",
+    available: false
+  },
+  {
+    room: "管371",
+    time: "14:10-15:00",
+    available: true
+  },
+  {
+    room: "管260",
+    time: "14:10-15:00",
+    available: true
+  },
+  {
+    room: "管226",
+    time: "14:10-15:00",
+    available: true
+  },
+  {
+    room: "管241",
+    time: "14:10-15:00",
+    available: false
+  },
+  {
+    room: "管371",
+    time: "15:10-16:00",
+    available: true
+  },
+  {
+    room: "管260",
+    time: "15:10-16:00",
+    available: true
+  },
+  {
+    room: "管226",
+    time: "15:10-16:00",
+    available: false
+  },
+  {
+    room: "管241",
+    time: "15:10-16:00",
+    available: true
+  },
+  {
+    room: "管371",
+    time: "16:10-17:00",
+    available: true
+  },
+  {
+    room: "管260",
+    time: "16:10-17:00",
+    available: false
+  },
+  {
+    room: "管226",
+    time: "16:10-17:00",
+    available: false
+  },
+  {
+    room: "管241",
+    time: "16:10-17:00",
+    available: true
+  }
+];
+
+//project information(project's name, project's professor, project's first reviewed teacher)
+var projects = [
+  {
+    name: "Schooling fish",
+    professor: "陳建宏",
+    teacher: ["余菁蓉", "王育民", "陳小芬"]
+  },
+  {
+    name: "Cheese 老師",
+    professor: "陳建宏",
+    teacher: ["尹邦嚴", "黃俊哲", "陳小芬"]
+  },
+  {
+    name: "Arduino 遠端農業監控系統",
+    professor: "戴榮賦",
+    teacher: ["簡宏宇", "俞旭昇", "姜美玲"]
+  },
+  {
+    name: "Let's Q&A",
+    professor: "洪嘉良",
+    teacher: ["余菁蓉", "王育民", "陳建宏"]
+  },
+  {
+    name: "RunningX",
+    professor: "俞旭昇",
+    teacher: ["簡宏宇", "洪嘉良", "戴榮賦"]
+  },
+  {
+    name: "應用無人載具進行空氣品質調查",
+    professor: "戴榮賦",
+    teacher: ["簡宏宇", "俞旭昇", "姜美玲"]
+  },
+  {
+    name: "TBS 一起來 Share Share 共享平台",
+    professor: "陳小芬",
+    teacher: ["黃俊哲", "洪嘉良", "陳建宏"]
+  },
+  {
+    name: "好食刻餐飲共享平台",
+    professor: "陳小芬",
+    teacher: ["陳彥錚", "王育民", "陳建宏"]
+  },
+  {
+    name: "以物聯網為基礎建構魚菜共生系統暨資料分析共享平台",
+    professor: "簡宏宇",
+    teacher: ["尹邦嚴", "俞旭昇", "戴榮賦"]
+  },
+  {
+    name: "埔里區域 PM2.5 低階感測器數據分析",
+    professor: "尹邦嚴",
+    teacher: ["游子宜", "洪嘉良", "戴榮賦"]
+  },
+  {
+    name: "上路有三寶安全不能少",
+    professor: "簡宏宇",
+    teacher: ["尹邦嚴", "陳彥錚", "陳小芬"]
+  }
+];
+
+//teacher heart locked relationship
+var locks = [
+  {
+    a: "簡宏宇",
+    b: "游子宜"
+  }
+];
+
+//teacher's available time
+var acceptions = [
+  {
+    name: "余菁蓉",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "尹邦嚴",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "陳彥錚",
+    first: true,
+    second: false,
+    third: false,
+    fourth: true
+  },
+  {
+    name: "黃俊哲",
+    first: true,
+    second: true,
+    third: true,
+    fourth: false
+  },
+  {
+    name: "簡宏宇",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "王育民",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "游子宜",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "俞旭昇",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "姜美玲",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "洪嘉良",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "戴榮賦",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "陳小芬",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  },
+  {
+    name: "陳建宏",
+    first: true,
+    second: true,
+    third: true,
+    fourth: true
+  }
+];
+
+//teacher's wished reviewing project rank
+var ranks = [
+  {
+    name: "余菁蓉",
+    first: "Let's Q&A",
+    second: "好食刻餐飲共享平台",
+    third: "TBS 一起來 Share Share 共享平台",
+    fourth: "Schooling fish",
+    fifth: null
+  },
+  {
+    name: "尹邦嚴",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "陳彥錚",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "黃俊哲",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "簡宏宇",
+    first: "Arduino 遠端農業監控系統",
+    second: "應用無人載具進行空氣品質調查",
+    third: "埔里區域 PM2.5 低階感測器數據分析",
+    fourth: "Cheese 老師",
+    fifth: "RunningX"
+  },
+  {
+    name: "王育民",
+    first: "Schooling fish",
+    second: "好食刻餐飲共享平台",
+    third: "Let's Q&A",
+    fourth: "以物聯網為基礎建構魚菜共生系統暨資料分析共享平台",
+    fifth: "Cheese 老師"
+  },
+  {
+    name: "游子宜",
+    first: "埔里區域 PM2.5 低階感測器數據分析",
+    second: null,
+    third: "Arduino 遠端農業監控系統",
+    fourth: "應用無人載具進行空氣品質調查",
+    fifth: "RunningX"
+  },
+  {
+    name: "俞旭昇",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "姜美玲",
+    first: "Arduino 遠端農業監控系統",
+    second: "應用無人載具進行空氣品質調查",
+    third: "以物聯網為基礎建構魚菜共生系統暨資料分析共享平台",
+    fourth: "RunningX",
+    fifth: "上路有三寶安全不能少"
+  },
+  {
+    name: "洪嘉良",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "戴榮賦",
+    first: "埔里區域 PM2.5 低階感測器數據分析",
+    second: "以物聯網為基礎建構魚菜共生系統暨資料分析共享平台",
+    third: "RunningX",
+    fourth: "TBS 一起來 Share Share 共享平台",
+    fifth: "Schooling fish"
+  },
+  {
+    name: "陳小芬",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  },
+  {
+    name: "陳建宏",
+    first: null,
+    second: null,
+    third: null,
+    fourth: null,
+    fifth: null
+  }
+];

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+/*scheduling the project by genetic algorithm*/
 router.get('/schedule', function(req, res) {
 	let classrooms = JSON.parse(req.query.classrooms);
 	let projects = JSON.parse(req.query.projects);
@@ -9,7 +10,7 @@ router.get('/schedule', function(req, res) {
 	let ranks = JSON.parse(req.query.ranks);
 	let ga = new geneticAlgorithm();
 	ga.initial(classrooms, projects, locks, acceptions, ranks);
-	for(let i=0; i<1000; i++) {
+	for(let i=0; i<100; i++) {
 		ga.crossover();
 		ga.selections();
 		ga.mutation();
@@ -17,6 +18,378 @@ router.get('/schedule', function(req, res) {
 	let rs = ga.getElite();
 	let stages = clean(rs.stages);
 	res.status(200).json({score: rs.score, stages: stages, process: rs.process});
+});
+
+/*scheduling the project by human*/
+router.get('/test', function(req, res) {
+	let projects = JSON.parse(req.query.projects);
+	let locks = JSON.parse(req.query.locks);
+	let acceptions = JSON.parse(req.query.acceptions);
+	let stages = [
+		[
+			{
+				"project":
+				{
+					"name": "Schooling fish",
+    				"professor": "陳建宏",
+    				"teacher": ["余菁蓉", "王育民", "陳小芬"]
+				},
+				"teachers":
+				[
+					{
+						"name":"洪嘉良",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"王育民",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"陳小芬",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "Cheese 老師",
+				    "professor": "陳建宏",
+				    "teacher": ["尹邦嚴", "黃俊哲", "陳小芬"]
+				},
+				"teachers":
+				[
+					{
+						"name":"陳彥錚",
+						"first":true,
+						"second":false,
+						"third":false,
+						"fourth":true
+					},
+					{
+						"name":"尹邦嚴",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"俞旭昇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "Arduino 遠端農業監控系統",
+				    "professor": "戴榮賦",
+				    "teacher": ["簡宏宇", "俞旭昇", "姜美玲"]
+				},
+				"teachers":
+				[
+					{
+						"name":"姜美玲",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"游子宜",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"簡宏宇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			}
+		],
+		[
+			{
+				"project":
+				{
+					"name":"Let's Q&A",
+					"professor":"洪嘉良",
+					"teacher":["余菁蓉","王育民","陳建宏"]
+				},
+				"teachers":
+				[
+					{
+						"name":"王育民",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"黃俊哲",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":false
+					},
+					{
+						"name":"余菁蓉",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "RunningX",
+				    "professor": "俞旭昇",
+				    "teacher": ["簡宏宇", "洪嘉良", "戴榮賦"]
+				},"teachers":
+				[
+					{
+						"name":"洪嘉良",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"戴榮賦",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"陳建宏",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "應用無人載具進行空氣品質調查",
+				    "professor": "戴榮賦",
+				    "teacher": ["簡宏宇", "俞旭昇", "姜美玲"]
+				},
+				"teachers":
+				[
+					{
+						"name":"簡宏宇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"俞旭昇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"姜美玲",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			}
+		],
+		[
+			{
+				"project":
+				{
+					"name": "TBS 一起來 Share Share 共享平台",
+				    "professor": "陳小芬",
+				    "teacher": ["黃俊哲", "洪嘉良", "陳建宏"]
+				},
+				"teachers":
+				[
+					{
+						"name":"余菁蓉",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"洪嘉良",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"黃俊哲",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":false
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "好食刻餐飲共享平台",
+				    "professor": "陳小芬",
+				    "teacher": ["陳彥錚", "王育民", "陳建宏"]
+				},
+				"teachers":
+				[
+					{
+						"name":"陳建宏",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"王育民",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"戴榮賦",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "以物聯網為基礎建構魚菜共生系統暨資料分析共享平台",
+				    "professor": "簡宏宇",
+				    "teacher": ["尹邦嚴", "俞旭昇", "戴榮賦"]
+				},
+				"teachers":
+				[
+					{
+						"name":"尹邦嚴",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"俞旭昇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"林美",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			}
+		],
+		[
+			{
+				"project":
+				{
+					"name": "埔里區域 PM2.5 低階感測器數據分析",
+				    "professor": "尹邦嚴",
+				    "teacher": ["游子宜", "洪嘉良", "戴榮賦"]
+				},
+				"teachers":
+				[
+					{
+						"name":"簡宏宇",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"游子宜",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"戴榮賦",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			},
+			{
+				"project":
+				{
+					"name": "上路有三寶安全不能少",
+				    "professor": "簡宏宇",
+				    "teacher": ["尹邦嚴", "陳彥錚", "陳小芬"]
+				},
+				"teachers":
+				[
+					{
+						"name":"陳建宏",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"陳小芬",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					},
+					{
+						"name":"林美",
+						"first":true,
+						"second":true,
+						"third":true,
+						"fourth":true
+					}
+				]
+			}
+		]
+	];
+	let f = fitness(stages, acceptions, projects, locks);
+	stages = clean(stages);
+	res.status(200).json({score: f.score, stages: stages, process: f.process});
+
 });
 
 function geneticAlgorithm() {
@@ -165,16 +538,26 @@ function putTeacher(generation, acception) {
 	let stages2 = generation[1];
 	let stages3 = generation[2];
 	let stages4 = generation[3];
-	//put teacher into ever stage
-	//set a condition to avoid the reviewed teacher is
-	//project's professor
+	//put teacher into ever stage set a condition to avoid the
+	//reviewed teacher is project's professor
 	//use one teachers' array in one time segment avoid the same
 	//teacher showing up in same project or in same time segment
+	//find the first reviewed professor and make them be easily selected
 	let ts = randomArray(JSON.parse(JSON.stringify(acception)));
 	for(let i=0; i<stages1.length; i++) {
 		let c = 0;
 		stages1[i].teachers = [];
 		while(c < 3) {
+			for(let j=0; j<3; j++) {
+				let tts = JSON.parse(JSON.stringify(ts));
+				let pos = tts.map(function(e) { return e.name; }).indexOf(stages1[i].project.teacher[j]);
+				if(pos > -1) {
+					let tmp = ts[0];
+					ts[0] = ts[pos];
+					ts[pos] = tmp;
+					break;
+				}
+			}
 			if(stages1[i].project.professor == ts[0].name) {
 				stages1[i].teachers.push(ts[1]);
 				ts.splice(1, 1);
@@ -189,6 +572,16 @@ function putTeacher(generation, acception) {
 		let c = 0;
 		stages2[i].teachers = [];
 		while(c < 3) {
+			for(let j=0; j<3; j++) {
+				let tts = JSON.parse(JSON.stringify(ts));
+				let pos = tts.map(function(e) { return e.name; }).indexOf(stages2[i].project.teacher[j]);
+				if(pos > -1) {
+					let tmp = ts[0];
+					ts[0] = ts[pos];
+					ts[pos] = tmp;
+					break;
+				}
+			}
 			if(stages2[i].project.professor == ts[0].name) {
 				stages2[i].teachers.push(ts[1]);
 				ts.splice(1, 1);
@@ -203,6 +596,16 @@ function putTeacher(generation, acception) {
 		let c = 0;
 		stages3[i].teachers = [];
 		while(c < 3) {
+			for(let j=0; j<3; j++) {
+				let tts = JSON.parse(JSON.stringify(ts));
+				let pos = tts.map(function(e) { return e.name; }).indexOf(stages3[i].project.teacher[j]);
+				if(pos > -1) {
+					let tmp = ts[0];
+					ts[0] = ts[pos];
+					ts[pos] = tmp;
+					break;
+				}
+			}
 			if(stages3[i].project.professor == ts[0].name) {
 				stages3[i].teachers.push(ts[1]);
 				ts.splice(1, 1);
@@ -217,6 +620,16 @@ function putTeacher(generation, acception) {
 		let c = 0;
 		stages4[i].teachers = [];
 		while(c < 3) {
+			for(let j=0; j<3; j++) {
+				let tts = JSON.parse(JSON.stringify(ts));
+				let pos = tts.map(function(e) { return e.name; }).indexOf(stages4[i].project.teacher[j]);
+				if(pos > -1) {
+					let tmp = ts[0];
+					ts[0] = ts[pos];
+					ts[pos] = tmp;
+					break;
+				}
+			}
 			if(stages4[i].project.professor == ts[0].name) {
 				stages4[i].teachers.push(ts[1]);
 				ts.splice(1, 1);
@@ -253,20 +666,24 @@ function fitness(generation, acception, project, lock) {
 	//teacher in unavailable time segment
 	//regulation2: give the 50 points of penalty when distributed
 	//teachers having heart lock show up in same project
-	//regulation3: give 20 point of bonus when the sorting rank
-	//of the teacher's reviewing (project) quantity is same 
+	//regulation3: give 10 point of bonus when the sorting rank
+	//of the teacher's reviewing (project) quantity is same
 	//with the rank of the teacher's leading (project) quantity
 	//and vice versa
-	//regulation4: give the 5 points of bonus when distributed
+	//regulation4: give the 10 points of bonus when distributed
 	//teacher is the project's first reviewed teacher
+	let r1 = 50;
+	let r2 = 50;
+	let r3 = 10;
+	let r4 = 10;
 	for(let i=0; i<stages1.length; i++) {
 		for(let j=0; j<3; j++) {
-			score = stages1[i].teachers[j].first ? score : score-50;
+			score = stages1[i].teachers[j].first ? score : score-r1;
 			if(!stages1[i].teachers[j].first) process.push("first time segment "+stages1[i].teachers[j].name+" isn't available");
 			for(let k=0; k<lock.length; k++) {
 				if(stages1[i].teachers[j].name == lock[k].a) {
 					for(let l=j+1; l<3; l++) {
-						score = (stages1[i].teachers[l].name == lock[k].b) ? score-50 : score;
+						score = (stages1[i].teachers[l].name == lock[k].b) ? score-r2 : score;
 						if(stages1[i].teachers[l].name == lock[k].b) process.push("first time segment "+stages1[i].teachers[j].name+" show up with "+stages1[i].teachers[l].name);
 					}
 				}
@@ -274,17 +691,17 @@ function fitness(generation, acception, project, lock) {
 			for(let k=0; k<reviewingRank.length; k++) {
 				reviewingRank[k].quantity = (stages1[i].teachers[j].name == reviewingRank[k].name) ? reviewingRank[k].quantity+1 : reviewingRank[k].quantity;
 			}
-			if(stages1[i].project.teacher.indexOf(stages1[i].teachers[j].name) > -1) score += 5;
+			if(stages1[i].project.teacher.indexOf(stages1[i].teachers[j].name) > -1) score += r4;
 		}
 	}
 	for(let i=0; i<stages2.length; i++) {
 		for(let j=0; j<3; j++) {
-			score = stages2[i].teachers[j].second ? score : score-50;
+			score = stages2[i].teachers[j].second ? score : score-r1;
 			if(!stages2[i].teachers[j].second) process.push("second time segment "+stages2[i].teachers[j].name+" isn't available");
 			for(let k=0; k<lock.length; k++) {
 				if(stages2[i].teachers[j].name == lock[k].a) {
 					for(let l=j+1; l<3; l++) {
-						score = (stages2[i].teachers[l].name == lock[k].b) ? score-50 : score;
+						score = (stages2[i].teachers[l].name == lock[k].b) ? score-r2 : score;
 						if(stages2[i].teachers[l].name == lock[k].b) process.push("second time segment "+stages2[i].teachers[j].name+" show up with "+stages2[i].teachers[l].name);
 					}
 				}
@@ -292,17 +709,17 @@ function fitness(generation, acception, project, lock) {
 			for(let k=0; k<reviewingRank.length; k++) {
 				reviewingRank[k].quantity = (stages2[i].teachers[j].name == reviewingRank[k].name) ? reviewingRank[k].quantity+1 : reviewingRank[k].quantity;
 			}
-			if(stages2[i].project.teacher.indexOf(stages2[i].teachers[j].name) > -1) score += 5;
+			if(stages2[i].project.teacher.indexOf(stages2[i].teachers[j].name) > -1) score += r4;
 		}
 	}
 	for(let i=0; i<stages3.length; i++) {
 		for(let j=0; j<3; j++) {
-			score = stages3[i].teachers[j].third ? score : score-50;
+			score = stages3[i].teachers[j].third ? score : score-r1;
 			if(!stages3[i].teachers[j].third) process.push("third time segment "+stages3[i].teachers[j].name+" isn't available");
 			for(let k=0; k<lock.length; k++) {
 				if(stages3[i].teachers[j].name == lock[k].a) {
 					for(let l=j+1; l<3; l++) {
-						score = (stages3[i].teachers[l].name == lock[k].b) ? score-50 : score;
+						score = (stages3[i].teachers[l].name == lock[k].b) ? score-r2 : score;
 						if(stages3[i].teachers[l].name == lock[k].b) process.push("third time segment "+stages3[i].teachers[j].name+" show up with "+stages3[i].teachers[l].name);
 					}
 				}
@@ -310,17 +727,17 @@ function fitness(generation, acception, project, lock) {
 			for(let k=0; k<reviewingRank.length; k++) {
 				reviewingRank[k].quantity = (stages3[i].teachers[j].name == reviewingRank[k].name) ? reviewingRank[k].quantity+1 : reviewingRank[k].quantity;
 			}
-			if(stages3[i].project.teacher.indexOf(stages3[i].teachers[j].name) > -1) score += 5;
+			if(stages3[i].project.teacher.indexOf(stages3[i].teachers[j].name) > -1) score += r4;
 		}
 	}
 	for(let i=0; i<stages4.length; i++) {
 		for(let j=0; j<3; j++) {
-			score = stages4[i].teachers[j].fourth ? score : score-50;
+			score = stages4[i].teachers[j].fourth ? score : score-r1;
 			if(!stages4[i].teachers[j].fourth) process.push("fourth time segment "+stages4[i].teachers[j].name+" isn't available");
 			for(let k=0; k<lock.length; k++) {
 				if(stages4[i].teachers[j].name == lock[k].a) {
 					for(let l=j+1; l<3; l++) {
-						score = (stages4[i].teachers[l].name == lock[k].b) ? score-50 : score;
+						score = (stages4[i].teachers[l].name == lock[k].b) ? score-r2 : score;
 						if(stages4[i].teachers[l].name == lock[k].b) process.push("fourth time segment "+stages4[i].teachers[j].name+" show up with "+stages4[i].teachers[l].name);
 					}
 				}
@@ -328,7 +745,7 @@ function fitness(generation, acception, project, lock) {
 			for(let k=0; k<reviewingRank.length; k++) {
 				reviewingRank[k].quantity = (stages4[i].teachers[j].name == reviewingRank[k].name) ? reviewingRank[k].quantity+1 : reviewingRank[k].quantity;
 			}
-			if(stages4[i].project.teacher.indexOf(stages4[i].teachers[j].name) > -1) score += 5;
+			if(stages4[i].project.teacher.indexOf(stages4[i].teachers[j].name) > -1) score += r4;
 		}
 	}
 	reviewingRank.sort(function(a, b) {
@@ -351,10 +768,10 @@ function fitness(generation, acception, project, lock) {
 	});
 	for(let i=0; i<reviewingRank.length; i+=2) {
 		if(reviewingRank[i].rank != reviewingRank[i+1].rank) {
-			score -= 10;
+			score -= r3;
 			process.push(reviewingRank[i].name+" ranking error!")
 		} else {
-			score += 10;
+			score += r3;
 		}
 	}
 	return {score: score, process: process};
