@@ -397,7 +397,6 @@ function finishLock() {
 }
 
 function getResult() {
-  $("#createRS").prop('disabled', true);
   //if project's quantity equal to classroom's quantity
   let cs = classrooms.filter(c => c.available == true );
   let crm = JSON.parse(JSON.stringify(classrooms));
@@ -471,7 +470,6 @@ function getResult() {
       for(let i=0; i<data.process.length; i++) {
         $("#record").append("<p>"+data.process[i]+"</p>");
       }
-      $("#createRS").prop('disabled', false);
     }
   );
 }
