@@ -552,5 +552,5 @@ $(document).ready(function(){
   $("#createLC").click(setLock);
   $("#nextLC").click(finishLock);
   $("#createRS").click(getResult);
-  $("#createTS").click(getTest);
+  // $("#createTS").click(getTest);
 });

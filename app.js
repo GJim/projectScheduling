@@ -1,9 +1,9 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const compression = require('compression');
+const helmet = require('helmet');
 
 var routes = require('./routes/index');
 
@@ -14,9 +14,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-//app.use(logger('dev'));
+// Hide server information from header
+app.disable('x-powered-by');
+app.use(function(_, res, next){
+  res.header('X-XSS-Protection', '1; mode=block');
+  res.header('X-Frame-Options', 'deny');
+  res.header('X-Content-Type-Options', 'nosniff');
+  next();
+});
+app.use(helmet.noCache({noEtag: true})); //set Cache-Control header
+app.use(helmet.noSniff());    // set X-Content-Type-Options header
+app.use(helmet.frameguard()); // set X-Frame-Options header
+app.use(helmet.xssFilter());  // set X-XSS-Protection header
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
